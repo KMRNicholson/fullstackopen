@@ -1,4 +1,4 @@
-Below you can find a sequence diagram depicting the interaction between the user's browser and the example app web server when the user creates new notes using the form at: https://studies.cs.helsinki.fi/exampleapp/spa
+Below you can find a sequence diagram depicting the interaction between the user's browser and the example app web server when the user visits: https://studies.cs.helsinki.fi/exampleapp/spa
 
 ```mermaid
 sequenceDiagram
