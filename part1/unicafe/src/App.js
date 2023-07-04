@@ -27,9 +27,7 @@ const Feedback = (props) =>
 const Statistics = (props) =>
   <div>
     <Header title='statistics'/>
-    <Stat label='good' value={props.goodState}/>
-    <Stat label='neutral' value={props.neutralState}/>
-    <Stat label='bad' value={props.badState}/>
+    {props.statistics}
   </div>
 
 const App = () => {
@@ -37,6 +35,16 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+
+  const stateMap = new Map()
+  stateMap.set('good', good)
+  stateMap.set('neutral', neutral)
+  stateMap.set('bad', bad)
+
+  const statistics = new Array()
+  stateMap.forEach((value, label) => {
+    statistics.push(<Stat key={label} label={label} value={value}/>)
+  })
 
   const handleClick = (feedback) => () => {
     switch (feedback) {
@@ -60,7 +68,7 @@ const App = () => {
   return (
     <div>
       <Feedback clickHandler={handleClick}/>
-      <Statistics goodState={good} neutralState={neutral} badState={bad}/>
+      <Statistics statistics={statistics}/>
     </div>
   )
 }
