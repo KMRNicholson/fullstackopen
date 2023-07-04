@@ -6,9 +6,10 @@ const Header = (props) =>
   </h1>
 
 const StatisticsLine = (props) =>
-  <div>
-    {props.text} {props.value}
-  </div>
+  <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+  </tr>
 
 const Feedback = (props) =>
   <div>
@@ -27,7 +28,11 @@ const Feedback = (props) =>
 const Statistics = (props) =>
   <div>
     <Header title='statistics'/>
-    {props.statistics}
+    <table>
+      <tbody>
+        {props.statistics}
+      </tbody>
+    </table>
   </div>
 
 const App = () => {
@@ -41,7 +46,7 @@ const App = () => {
     positive: '0%'
   })
 
-  var statistics = 'No feedback given'
+  var statistics = <tr><td>No feedback given</td></tr>
 
   if(feedback.all != 0){
     statistics = new Array()
