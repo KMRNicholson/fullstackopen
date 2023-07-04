@@ -1,6 +1,11 @@
 import { useState } from 'react'
 
-const Feedback = (props) =>
+const Header = (props) =>
+  <h1>
+    {props.title}
+  </h1>
+
+const Options = (props) =>
   <div>
     <button onClick={props.handleVote}>
       vote
@@ -12,6 +17,7 @@ const Feedback = (props) =>
 
 const Anecdote = (props) =>
   <div>
+    <Header title={props.title}/>
     <p>{props.text}</p>
     <p>has {props.votes} votes</p>
   </div>
@@ -29,7 +35,7 @@ const App = () => {
   ]
 
   const rand = () => Math.floor(Math.random() * anecdotes.length)
-  const getSelectedVotes = () => anecdotes.findIndex((anecdote)=>anecdote==selected)
+  const getSelectedVotes = () => anecdotes.findIndex((anecdote)=>anecdote===selected)
 
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
   const [selected, setSelected] = useState(anecdotes[rand()])
@@ -43,8 +49,9 @@ const App = () => {
 
   return (
     <div>
-      <Anecdote text={selected} votes={votes[getSelectedVotes()]}/>
-      <Feedback handleNext={handleNext} handleVote={handleVote}/>
+      <Anecdote title='Anecdote of the day' text={selected} votes={votes[getSelectedVotes()]}/>
+      <Options handleNext={handleNext} handleVote={handleVote}/>
+      <Anecdote title='Anecdote with most votes' text={anecdotes[votes.indexOf(Math.max(...votes))]} votes={votes[votes.indexOf(Math.max(...votes))]}/>
     </div>
   )
 }
