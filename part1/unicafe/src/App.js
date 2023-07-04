@@ -32,37 +32,47 @@ const Statistics = (props) =>
 
 const App = () => {
   // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-
-  const stateMap = new Map()
-  stateMap.set('good', good)
-  stateMap.set('neutral', neutral)
-  stateMap.set('bad', bad)
-
-  const statistics = new Array()
-  stateMap.forEach((value, label) => {
-    statistics.push(<Stat key={label} label={label} value={value}/>)
+  const [feedback, setFeedback] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+    all: 0,
+    average: 0,
+    positive: '0%'
   })
+  
+  const statistics = new Array()
+  for(const key in feedback){
+    statistics.push(<Stat key={key} label={key} value={feedback[key]}/>)
+  }
 
-  const handleClick = (feedback) => () => {
-    switch (feedback) {
+  const handleClick = (feedbackClicked) => () => {
+    const newFeedback = {...feedback}
+
+    switch (feedbackClicked) {
       case 'good':
-        setGood(good + 1)
+        newFeedback.good = newFeedback.good + 1
         break;
 
       case 'neutral':
-        setNeutral(neutral + 1)
+        newFeedback.neutral = newFeedback.neutral + 1
         break;
 
       case 'bad':
-        setBad(bad + 1)
+        newFeedback.bad = newFeedback.bad + 1
         break;
     
       default:
         break;
     }
+
+    newFeedback.all = newFeedback.good + newFeedback.bad + newFeedback.neutral
+    newFeedback.average = (newFeedback.good - newFeedback.bad) / newFeedback.all
+
+    const positive = newFeedback.good / newFeedback.all * 100
+    newFeedback.positive = `${positive}%`
+
+    setFeedback(newFeedback)
   }
 
   return (
