@@ -41,11 +41,15 @@ const App = () => {
     positive: '0%'
   })
 
-  const statistics = new Array()
-  for(const key in feedback){
-    statistics.push(<Stat key={key} label={key} value={feedback[key]}/>)
-  }
+  var statistics = 'No feedback given'
 
+  if(feedback.all != 0){
+    statistics = new Array()
+    for(const key in feedback){
+      statistics.push(<Stat key={key} label={key} value={feedback[key]}/>)
+    }
+  }
+  
   const handleClick = (feedbackClicked) => () => {
     const newFeedback = {...feedback}
 
