@@ -5,9 +5,9 @@ const Header = (props) =>
     {props.title}
   </h1>
 
-const Stat = (props) =>
+const StatisticsLine = (props) =>
   <div>
-    {props.label} {props.value}
+    {props.text} {props.value}
   </div>
 
 const Feedback = (props) =>
@@ -46,7 +46,7 @@ const App = () => {
   if(feedback.all != 0){
     statistics = new Array()
     for(const key in feedback){
-      statistics.push(<Stat key={key} label={key} value={feedback[key]}/>)
+      statistics.push(<StatisticsLine key={key} text={key} value={feedback[key]}/>)
     }
   }
   
