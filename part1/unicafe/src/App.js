@@ -40,7 +40,7 @@ const App = () => {
     average: 0,
     positive: '0%'
   })
-  
+
   const statistics = new Array()
   for(const key in feedback){
     statistics.push(<Stat key={key} label={key} value={feedback[key]}/>)
