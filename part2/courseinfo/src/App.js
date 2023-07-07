@@ -18,7 +18,11 @@ const Total = ({parts}) =>
   </p>
 
 const Course = ({course}) =>
-  <div></div>
+  <div>
+    <Header courseName={course.name} />
+    <Content parts={course.parts} />
+    <Total parts={course.parts} />
+  </div>
 
 const App = () => {
   const course = {
@@ -40,13 +44,7 @@ const App = () => {
   }
   
 
-  return (
-    <div>
-      <Header courseName={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
-    </div>
-  )
+  return <Course course={course}/>
 }
 
 export default App;
