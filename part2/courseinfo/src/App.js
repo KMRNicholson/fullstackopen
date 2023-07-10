@@ -13,9 +13,9 @@ const Content = ({parts}) => parts.map((element, index) =>
 )
 
 const Total = ({parts}) => 
-  <p>
-    Number of exercises {parts.map(part => part.exercises).reduce((sum, exercises) => sum + exercises, 0)}
-  </p>
+  <strong>
+    total of {parts.map(part => part.exercises).reduce((sum, exercises) => sum + exercises, 0)} exercise(s)
+  </strong>
 
 const Course = ({course}) =>
   <div>
