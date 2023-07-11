@@ -9,6 +9,14 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+
+    const personExists = persons.filter(person => person.name === newName).length > 0
+
+    if(personExists){
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+    
     const newPerson = { name: newName }
     const newPersons = [
       ...persons,
