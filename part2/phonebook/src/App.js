@@ -16,6 +16,7 @@ const App = () => {
     personsService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
+      .catch(() => alert('Failed to load persons.'))
   }, [])
 
   const handleSubmit = (event) => {
@@ -31,8 +32,24 @@ const App = () => {
     personsService
       .create(newPerson)
       .then(createdPerson => setPersons(persons.concat(createdPerson)))
+      .catch(() => alert('Failed to create person.'))
     setNewName('')
     setNewNumber('')
+  }
+
+  const handleDelete = (id) => () => {
+    const person = persons.find(person => person.id === id)
+    if(window.confirm(`Are you sure you want to delete ${person.name}?`)){
+      personsService
+        .remove(id)
+        .then(() => {
+          personsService
+            .getAll()
+            .then(initialPersons => setPersons(initialPersons))
+            .catch(() => alert('Failed to load persons.'))
+        })
+        .catch(() => alert('Failed to delete person. Please refresh and try again'))
+    }
   }
 
   const handleNameChange = (event) => setNewName(event.target.value) 
@@ -53,8 +70,8 @@ const App = () => {
       />
       <h3>Numbers</h3>
       {filter.length > 0 
-        ? <Persons persons={persons.filter(person => person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))}/>
-        : <Persons persons={persons}/>}
+        ? <Persons persons={persons.filter(person => person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))} handleDelete={handleDelete}/>
+        : <Persons persons={persons} handleDelete={handleDelete}/>}
     </div>
   )
 }
