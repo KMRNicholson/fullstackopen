@@ -15,14 +15,8 @@ const App = () => {
     const personsUri = 'http://localhost:3001/persons'
     axios
       .get(personsUri)
-      .then(response => {
-        const data = response.data
-        const filteredData = filter.length > 0 
-          ? data.filter(person => person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))
-          : data
-        setPersons(filteredData)
-      })
-  })
+      .then(response => setPersons(response.data))
+  }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -33,25 +27,21 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
       return
     }
-    
-    const newId = persons[persons.length-1].id + 1
-    const newPerson = { name: newName, number: newNumber, id: newId }
-    const newPersons = [
-      ...persons,
-      newPerson
-    ]
-    setPersons(newPersons)
-    setNewName('')
-    setNewNumber('')
+
+    const personsUri = 'http://localhost:3001/persons'
+    const newPerson = { name: newName, number: newNumber }
+    axios
+      .post(personsUri, newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleNameChange = (event) => setNewName(event.target.value) 
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setFilter(event.target.value)
-
-  const filtered = filter.length > 0 
-    ? persons.filter(person => person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))
-    : persons
 
   return (
     <div>
@@ -66,7 +56,9 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons persons={filtered}/>
+      {filter.length > 0 
+        ? <Persons persons={persons.filter(person => person.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))}/>
+        : <Persons persons={persons}/>}
     </div>
   )
 }
