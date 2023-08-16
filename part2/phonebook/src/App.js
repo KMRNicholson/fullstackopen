@@ -30,7 +30,7 @@ const App = () => {
     setNotification(<Notification type={type} message={message} />)
     setTimeout(() => {
       setNotification(null)
-    }, 3000)
+    }, 5000)
   }
 
   const handleSubmit = (event) => {
@@ -55,7 +55,7 @@ const App = () => {
           reloadPersons()
           handleNotification('success', `Updated ${newPerson.name}`)
         })
-        .catch(() => alert('Failed to update person. Please refresh and try again.'))
+        .catch(() => handleNotification('error', `Failed to update ${newPerson.name}. Please refresh and try again.`))
     }
 
     setNewName('')
@@ -69,7 +69,7 @@ const App = () => {
         reloadPersons()
         handleNotification('success', `Added ${newPerson.name}`)
       })
-      .catch(() => alert('Failed to create person.'))
+      .catch(() => handleNotification('error', `Failed to add ${newPerson.name}. Please refresh and try again.`))
     
     setNewName('')
     setNewNumber('')
@@ -84,7 +84,7 @@ const App = () => {
           reloadPersons()
           handleNotification('success', `Deleted ${person.name}`)
         })
-        .catch(() => alert('Failed to delete person. Please refresh and try again.'))
+        .catch(() => handleNotification('error', `Failed to delete ${person.name}. Please refresh and try again.`))
     }
   }
 
