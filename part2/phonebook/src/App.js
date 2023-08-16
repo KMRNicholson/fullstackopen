@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 
 import personsService from './services/Persons'
 
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState('')
 
   useEffect(() => {
     personsService
@@ -24,32 +26,51 @@ const App = () => {
     .then(initialPersons => setPersons(initialPersons))
     .catch(() => alert('Failed to load persons.'))
 
+  const handleNotification = (type, message) => {
+    setNotification(<Notification type={type} message={message} />)
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     const newPerson = { name: newName, number: newNumber }
 
     const existingPerson = persons.find(person => person.name === newName)
     if(existingPerson != undefined){
-      const confirmUpdate = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      handleExisting(existingPerson, newPerson)
+    }else{
+      handleNew(newPerson)
+    }
+  }
 
-      if(confirmUpdate){
-        personsService
-          .update(existingPerson.id, newPerson)
-          .then(() => reloadPersons())
-          .catch(() => alert('Failed to update person. Please refresh and try again.'))
-      }
-      
-      setNewName('')
-      setNewNumber('')
-      
-      return
+  const handleExisting = (existingPerson, newPerson) => {
+    const confirmUpdate = window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)
+
+    if(confirmUpdate){
+      personsService
+        .update(existingPerson.id, newPerson)
+        .then(() => {
+          reloadPersons()
+          handleNotification('success', `Updated ${newPerson.name}`)
+        })
+        .catch(() => alert('Failed to update person. Please refresh and try again.'))
     }
 
+    setNewName('')
+    setNewNumber('')
+  }
+
+  const handleNew = (newPerson) => {
     personsService
       .create(newPerson)
-      .then(() => reloadPersons())
+      .then(() => {
+        reloadPersons()
+        handleNotification('success', `Added ${newPerson.name}`)
+      })
       .catch(() => alert('Failed to create person.'))
-
+    
     setNewName('')
     setNewNumber('')
   }
@@ -59,7 +80,10 @@ const App = () => {
     if(window.confirm(`Are you sure you want to delete ${person.name}?`)){
       personsService
         .remove(id)
-        .then(() => reloadPersons())
+        .then(() => {
+          reloadPersons()
+          handleNotification('success', `Deleted ${person.name}`)
+        })
         .catch(() => alert('Failed to delete person. Please refresh and try again.'))
     }
   }
@@ -71,6 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {notification}
       <Filter changeHandler={handleFilterChange} value={filter}/>
       <h2>add a new</h2>
       <PersonForm 
