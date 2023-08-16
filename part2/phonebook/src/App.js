@@ -43,6 +43,9 @@ const App = () => {
     }else{
       handleNew(newPerson)
     }
+
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleExisting = (existingPerson, newPerson) => {
@@ -57,9 +60,6 @@ const App = () => {
         })
         .catch(() => handleNotification('error', `Failed to update ${newPerson.name}. Please refresh and try again.`))
     }
-
-    setNewName('')
-    setNewNumber('')
   }
 
   const handleNew = (newPerson) => {
@@ -70,9 +70,6 @@ const App = () => {
         handleNotification('success', `Added ${newPerson.name}`)
       })
       .catch(() => handleNotification('error', `Failed to add ${newPerson.name}. Please refresh and try again.`))
-    
-    setNewName('')
-    setNewNumber('')
   }
 
   const handleDelete = (id) => () => {
