@@ -38,7 +38,7 @@ const App = () => {
     const newPerson = { name: newName, number: newNumber }
 
     const existingPerson = persons.find(person => person.name === newName)
-    if(existingPerson != undefined){
+    if(existingPerson !== undefined){
       handleExisting(existingPerson, newPerson)
     }else{
       handleNew(newPerson)
