@@ -12,6 +12,10 @@ const App = () => {
 
   const handleFilterChange = (event) => setFilter(event.target.value)
 
+  const handleShow = (country) => () => {
+    console.log(country)
+  }
+
   useEffect(() => {
     countriesService
       .getAll()
@@ -26,7 +30,7 @@ const App = () => {
     if(filteredResults.length > 10){
       if(filter.length > 0) setFilteredCountries('Too many matches, specify another filter.')
     } else {
-      setFilteredCountries(<Countries countries={filteredResults} />)
+      setFilteredCountries(<Countries countries={filteredResults} handleShow={handleShow}/>)
     }
   }, [filter, countries])
 
