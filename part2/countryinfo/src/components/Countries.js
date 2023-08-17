@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 const Country = ({country}) => {
   const languages = []
@@ -23,6 +23,17 @@ const Country = ({country}) => {
 const Countries = ({countries}) => {
   const [countryList, setCountryList] = useState([])
 
+  const handleShow = useCallback((countryName) => () => {
+    const selectedCountry = countries.map(country => {
+      if(country.name.common === countryName) 
+        return <Country key={country.name.common} country={country}/>
+      else
+        return ''
+    })
+
+    setCountryList(selectedCountry)
+  }, [countries])
+
   useEffect(() => {
     const newList = []
     if(countries.length === 1) {
@@ -30,20 +41,11 @@ const Countries = ({countries}) => {
     }else{
       for(const index in countries){
         const country = countries[index]
-        newList.push(<div>{country.name.common} <button onClick={handleShow(country.name.common)}>show</button></div>)
+        newList.push(<div key={country.name.common}>{country.name.common} <button onClick={handleShow(country.name.common)}>show</button></div>)
       }
     }
     setCountryList(newList)
-  }, [countries])
-
-  const handleShow = (countryName) => () => {
-    const selectedCountry = countries.map(country => {
-      if(country.name.common === countryName) 
-        return <Country key={country.name.common} country={country}/>
-    })
-
-    setCountryList(selectedCountry)
-  }
+  }, [countries, handleShow])
 
   return countryList
 }
