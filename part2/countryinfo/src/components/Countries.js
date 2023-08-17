@@ -1,4 +1,6 @@
-const DetailedInformation = ({country}) => {
+import { useEffect, useState } from "react"
+
+const DetailedCountry = ({country}) => {
   const languages = []
   for(const key in country.languages){
     languages.push(country.languages[key])
@@ -16,29 +18,42 @@ const DetailedInformation = ({country}) => {
       <img src={country.flags.svg} alt={country.flags.alt} height='500' width='500'/>
     </div>
   )
-}
-  
+} 
 
-const Country = ({country, handleShow, show}) => {
+const Country = ({country, handleShow}) => {
   return (
     <div>
-      { show 
-        ? <DetailedInformation country={country} />
-        : country.name.common 
-      }
-      <button onClick={handleShow(country)}>show</button>
+      {country.name.common} <button onClick={handleShow(country.name.common)}>show</button>
     </div>
   )
-} 
-    
+}
 
-const Countries = ({countries, handleShow}) => {
+const Countries = ({countries}) => {
+  const [countryList, setCountryList] = useState([])
+
+  useEffect(() => {
+    const newList = []
     if(countries.length === 1) {
-      const country = countries[0]
-      return <Country key={country.name.common} country={country} handleShow={handleShow} show={true}/>
+      newList.push(<DetailedCountry key={countries[0].name.common} country={countries[0]}/>)
+    }else{
+      for(const index in countries){
+        const country = countries[index]
+        newList.push(<Country key={country.name.common} country={country} handleShow={handleShow}/>)
+      }
     }
+    setCountryList(newList)
+  }, [countries])
 
-    return countries.map(country => <Country key={country.name.common} country={country} handleShow={handleShow} show={false}/>)
+  const handleShow = (countryName) => () => {
+    const selectedCountry = countries.map(country => {
+      if(country.name.common === countryName) 
+        return <DetailedCountry key={country.name.common} country={country}/>
+    })
+
+    setCountryList(selectedCountry)
+  }
+
+  return countryList
 }
 
 export default Countries
