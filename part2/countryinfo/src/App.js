@@ -9,7 +9,6 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [filteredCountries, setFilteredCountries] = useState([])
   const [filter, setFilter] = useState('')
-
   const handleFilterChange = (event) => setFilter(event.target.value)
 
   useEffect(() => {
