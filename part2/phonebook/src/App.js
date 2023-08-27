@@ -65,11 +65,13 @@ const App = () => {
   const handleNew = (newPerson) => {
     personsService
       .create(newPerson)
-      .then(() => {
+      .then(response => {
         reloadPersons()
         handleNotification('success', `Added ${newPerson.name}`)
       })
-      .catch(() => handleNotification('error', `Failed to add ${newPerson.name}. Please refresh and try again.`))
+      .catch((error) => {
+        handleNotification('error', error.response.data.error)
+      })
   }
 
   const handleDelete = (id) => () => {
