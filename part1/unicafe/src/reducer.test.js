@@ -73,4 +73,29 @@ describe('unicafe reducer', () => {
       positive: '0%'
     })
   })
+
+  test('reset resets all feedback', () => {
+    const action = {
+      type: 'reset'
+    }
+    const state = {
+      good: 1,
+      neutral: 0,
+      bad: 0,
+      all: 1,
+      average: 1,
+      positive: '100%'
+    }
+
+    deepFreeze(state)
+    const newState = counterReducer(state, action)
+    expect(newState).toEqual({
+      good: 0,
+      neutral: 0,
+      bad: 0,
+      all: 0,
+      average: 0,
+      positive: '0%'
+    })
+  })
 })

@@ -21,6 +21,9 @@ const counterReducer = (feedback = initialFeedback, action) => {
     case 'bad':
       newFeedback.bad++
       break;
+
+    case 'reset':
+      return initialFeedback
   
     default:
       return newFeedback
