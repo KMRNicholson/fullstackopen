@@ -1,6 +1,4 @@
-import _ from 'lodash'
-
-const anecdoteList = [ 
+const initialState = [ 
   {
     content: 'If it hurts, do it more often.',
     votes: 0
@@ -35,37 +33,17 @@ const anecdoteList = [
   }
 ]
 
-const rand = length => Math.floor(Math.random() * length)
-
-const initialState = {
-  randomAnecdote: anecdoteList[rand(anecdoteList.length)],
-  mostVotedAnecdote: anecdoteList[rand(anecdoteList.length)],
-  anecdotes: anecdoteList
-}
-
 const anecdoteReducer = (state = initialState, action) => {
-  const newState = { ...state }
   switch (action.type) {
     case 'CREATE':
-      newState.anecdotes = [ ...newState.anecdotes, action.payload ]
-      break;
+      return [ ...state, action.payload ]
 
     case 'VOTE':
-      newState.randomAnecdote = newState.randomAnecdote.content === action.payload.content ? action.payload : newState.randomAnecdote
-      newState.anecdotes = newState.anecdotes.map(anecdote => anecdote.content === action.payload.content ? action.payload : anecdote)
-      break;
-    
-    case 'NEXT':
-      newState.randomAnecdote = newState.anecdotes[rand(newState.anecdotes.length)]
-      break;
+      return state.map(anecdote => anecdote.content === action.payload.content ? action.payload : anecdote)
   
     default:
       return state
   }
-
-  newState.mostVotedAnecdote =_.head(_.orderBy(newState.anecdotes, 'votes', 'desc'))
-
-  return newState
 }
 
 export const createAnecdote = content => {
@@ -85,12 +63,6 @@ export const voteAnecdote = anecdote => {
       content: anecdote.content,
       votes: ++anecdote.votes
     }
-  }
-}
-
-export const nextAnecdote = () => {
-  return {
-    type: 'NEXT'
   }
 }
 
