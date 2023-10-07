@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
-import { voteAnecdote, nextAnecdote } from './reducers/anecdoteReducer'
+import { voteAnecdote, nextAnecdote, createAnecdote } from './reducers/anecdoteReducer'
 
 const Header = ({ title }) =>
   <h1>
@@ -29,6 +29,12 @@ const App = () => {
 
   const handleNext = () => dispatch(nextAnecdote())
   const handleVote = anecdote => () => dispatch(voteAnecdote(anecdote))
+  const handleNew = event => {
+    event.preventDefault()
+    const content = event.target.anecdote.value
+    event.target.anecdote.value = ''
+    dispatch(createAnecdote(content))
+  }
 
   return (
     <div>
@@ -36,6 +42,11 @@ const App = () => {
       <Anecdote anecdote={anecdoteOfTheDay} handleNext={handleNext} handleVote={handleVote} />
       <Header title='Anecdote with most votes'/>
       <Anecdote anecdote={getHighestVotes()} handleNext={handleNext} handleVote={handleVote} />
+      <Header title='New Anecdote'/>
+      <form onSubmit={handleNew}>
+        <input name="anecdote" /> 
+        <button type="submit">add</button>
+      </form>
     </div>
   )
 }
