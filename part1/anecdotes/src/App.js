@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import { voteAnecdote, nextAnecdote, createAnecdote } from './reducers/anecdoteReducer'
+import AnecdoteForm from './components/AnecdoteForm'
 
 const Header = ({ title }) =>
   <h1>
@@ -39,11 +40,7 @@ const App = () => {
       <Anecdote anecdote={randomAnecdote} handleNext={handleNext} handleVote={handleVote} />
       <Header title='Anecdote with most votes'/>
       <Anecdote anecdote={mostVotedAnecdote} handleNext={handleNext} handleVote={handleVote} />
-      <Header title='New Anecdote'/>
-      <form onSubmit={handleNew}>
-        <input name="anecdote" /> 
-        <button type="submit">add</button>
-      </form>
+      <AnecdoteForm />
     </div>
   )
 }
