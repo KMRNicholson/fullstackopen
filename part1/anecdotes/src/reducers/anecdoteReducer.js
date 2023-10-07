@@ -38,42 +38,34 @@ const anecdoteList = [
 const rand = length => Math.floor(Math.random() * length)
 
 const initialState = {
-  anecdoteOfTheDay: anecdoteList[rand(anecdoteList.length)],
+  randomAnecdote: anecdoteList[rand(anecdoteList.length)],
+  mostVotedAnecdote: anecdoteList[rand(anecdoteList.length)],
   anecdotes: anecdoteList
 }
 
 const anecdoteReducer = (state = initialState, action) => {
-  
-
+  const newState = { ...state }
   switch (action.type) {
     case 'CREATE':
-      const newState = {
-        anecdoteOfTheDay: state.anecdoteOfTheDay,
-        anecdotes: [
-          ...state.anecdotes,
-          action.payload
-        ]
-      }
-
-      console.log(newState)
-
-      return newState
+      newState.anecdotes = [ ...newState.anecdotes, action.payload ]
+      break;
 
     case 'VOTE':
-      return {
-        anecdoteOfTheDay: state.anecdoteOfTheDay.content === action.payload.content ? action.payload : state.anecdoteOfTheDay,
-        anecdotes: state.anecdotes.map(anecdote => anecdote.content === action.payload.content ? action.payload : anecdote)
-      }
+      newState.randomAnecdote = newState.randomAnecdote.content === action.payload.content ? action.payload : newState.randomAnecdote
+      newState.anecdotes = newState.anecdotes.map(anecdote => anecdote.content === action.payload.content ? action.payload : anecdote)
+      break;
     
     case 'NEXT':
-      return {
-        anecdoteOfTheDay: state.anecdotes[rand(state.anecdotes.length)],
-        anecdotes: state.anecdotes
-      }
+      newState.randomAnecdote = newState.anecdotes[rand(newState.anecdotes.length)]
+      break;
   
     default:
       return state
   }
+
+  newState.mostVotedAnecdote =_.head(_.orderBy(newState.anecdotes, 'votes', 'desc'))
+
+  return newState
 }
 
 export const createAnecdote = content => {

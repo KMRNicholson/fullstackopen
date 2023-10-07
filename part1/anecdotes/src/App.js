@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import { voteAnecdote, nextAnecdote, createAnecdote } from './reducers/anecdoteReducer'
@@ -22,10 +21,8 @@ const Anecdote = ({ anecdote, handleVote, handleNext }) =>
 
 const App = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.anecdotes)
-  const anecdoteOfTheDay = useSelector(state => state.anecdoteOfTheDay)
-
-  const getHighestVotes = () => _.head(_.orderBy(anecdotes, 'votes', 'desc'))
+  const randomAnecdote = useSelector(state => state.randomAnecdote)
+  const mostVotedAnecdote = useSelector(state => state.mostVotedAnecdote)
 
   const handleNext = () => dispatch(nextAnecdote())
   const handleVote = anecdote => () => dispatch(voteAnecdote(anecdote))
@@ -39,9 +36,9 @@ const App = () => {
   return (
     <div>
       <Header title='Anecdote of the day'/>
-      <Anecdote anecdote={anecdoteOfTheDay} handleNext={handleNext} handleVote={handleVote} />
+      <Anecdote anecdote={randomAnecdote} handleNext={handleNext} handleVote={handleVote} />
       <Header title='Anecdote with most votes'/>
-      <Anecdote anecdote={getHighestVotes()} handleNext={handleNext} handleVote={handleVote} />
+      <Anecdote anecdote={mostVotedAnecdote} handleNext={handleNext} handleVote={handleVote} />
       <Header title='New Anecdote'/>
       <form onSubmit={handleNew}>
         <input name="anecdote" /> 
