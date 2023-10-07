@@ -1,93 +1,57 @@
-import { useState } from 'react'
+import _ from 'lodash'
 
-const Header = (props) =>
+const Header = ({ title }) =>
   <h1>
-    {props.title}
+    { title }
   </h1>
 
-const StatisticsLine = (props) =>
+const StatisticsLine = ({ text, value }) =>
   <tr>
-    <td>{props.text}</td>
-    <td>{props.value}</td>
+    <td>{ text }</td>
+    <td>{ value }</td>
   </tr>
 
-const Feedback = (props) =>
+const Feedback = ({ clickHandler }) =>
   <div>
-    <Header title='give feedback'/>
-    <button onClick={props.clickHandler('good')}>
+    <button onClick={clickHandler('good')}>
       good
     </button>
-    <button onClick={props.clickHandler('neutral')}>
+    <button onClick={clickHandler('neutral')}>
       neutral
     </button>
-    <button onClick={props.clickHandler('bad')}>
+    <button onClick={clickHandler('bad')}>
       bad
+    </button>
+    <button onClick={clickHandler('reset')}>
+      reset
     </button>
   </div>
   
-const Statistics = (props) =>
+const Statistics = ({ statistics }) =>
   <div>
-    <Header title='statistics'/>
     <table>
       <tbody>
-        {props.statistics}
+        { statistics }
       </tbody>
     </table>
   </div>
 
-const App = () => {
-  // save clicks of each button to its own state
-  const [feedback, setFeedback] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-    all: 0,
-    average: 0,
-    positive: '0%'
-  })
-
-  var statistics = <tr><td>No feedback given</td></tr>
-
-  if(feedback.all != 0){
-    statistics = new Array()
-    for(const key in feedback){
-      statistics.push(<StatisticsLine key={key} text={key} value={feedback[key]}/>)
-    }
-  }
+const App = ({ store }) => {
+  const feedback = store.getState()
+  const statistics = _.forEach(feedback, (value, key) => 
+    <StatisticsLine key={ key } text={ key } value={ value }/>)
   
-  const handleClick = (feedbackClicked) => () => {
-    const newFeedback = {...feedback}
-
-    switch (feedbackClicked) {
-      case 'good':
-        newFeedback.good = newFeedback.good + 1
-        break;
-
-      case 'neutral':
-        newFeedback.neutral = newFeedback.neutral + 1
-        break;
-
-      case 'bad':
-        newFeedback.bad = newFeedback.bad + 1
-        break;
-    
-      default:
-        break;
-    }
-
-    newFeedback.all = newFeedback.good + newFeedback.bad + newFeedback.neutral
-    newFeedback.average = (newFeedback.good - newFeedback.bad) / newFeedback.all
-
-    const positive = newFeedback.good / newFeedback.all * 100
-    newFeedback.positive = `${positive}%`
-
-    setFeedback(newFeedback)
-  }
+  const handleClick = feedbackClicked => () => store.dispatch({ type: feedbackClicked })
 
   return (
     <div>
-      <Feedback clickHandler={handleClick}/>
-      <Statistics statistics={statistics}/>
+      <Header title='give feedback'/>
+      <Feedback store={store} clickHandler={handleClick}/>
+      <Header title='statistics'/>
+      { feedback.all === 0 ? 
+        <p>No feedback given</p> : 
+        <Statistics statistics={ statistics }/> 
+      }
     </div>
   )
 }
