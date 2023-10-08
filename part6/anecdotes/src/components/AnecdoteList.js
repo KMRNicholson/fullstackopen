@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import anecdoteReducer, { voteAnecdote, setAnecdotes } from '../reducers/anecdoteReducer'
+import { voteAnecdote, setAnecdotes } from '../reducers/anecdoteReducer'
 import { showNotification, hideNotification } from '../reducers/notificationReducer'
 import anecdoteService from '../services/Anecdotes'
 import Filter from './Filter'
@@ -39,7 +39,7 @@ const AnecdoteList = () => {
   return (
     <div>
       <Filter />
-      { anecdotes.map(anecdote => <Anecdote key={Number((Math.random() * 1000000).toFixed(0))} anecdote={anecdote} vote={vote} />) }
+      { anecdotes.map(anecdote => <Anecdote key={anecdote.id} anecdote={anecdote} vote={vote} />) }
     </div>
   )
 }
