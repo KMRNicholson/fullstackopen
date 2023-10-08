@@ -1,7 +1,8 @@
 import _ from 'lodash'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { showNotification, hideNotification } from '../reducers/notificationReducer'
+import { voteFor, initializeAnecdotes } from '../reducers/anecdoteReducer'
+import { setNotification } from '../reducers/notificationReducer'
 import Filter from './Filter'
 
 const Anecdote = ({ anecdote, vote }) =>
@@ -20,17 +21,20 @@ const AnecdoteList = () => {
     _.orderBy(state.anecdotes, 'votes', 'desc') : 
     _.orderBy(state.anecdotes, 'votes', 'desc').filter(anecdote => anecdote.content.includes(state.filter))
   )
+
+  useEffect(() => {
+    dispatch(initializeAnecdotes())
+  }, [])
   
-  const vote = anecdote => () => {
-    dispatch(voteAnecdote(anecdote))
-    dispatch(showNotification(`You voted for '${anecdote.content}'`))
-    setTimeout(() => dispatch(hideNotification()), 5000)
+  const vote = anecdote => async () => {
+    await dispatch(voteFor(anecdote))
+    dispatch(setNotification(`You voted for '${anecdote.content}'`, 5))
   }
   
   return (
     <div>
       <Filter />
-      { anecdotes.map(anecdote => <Anecdote key={Number((Math.random() * 1000000).toFixed(0))} anecdote={anecdote} vote={vote} />) }
+      { anecdotes.map(anecdote => <Anecdote key={anecdote.id} anecdote={anecdote} vote={vote} />) }
     </div>
   )
 }
