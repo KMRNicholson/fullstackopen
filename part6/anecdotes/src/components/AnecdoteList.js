@@ -1,7 +1,9 @@
 import _ from 'lodash'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { voteAnecdote } from '../reducers/anecdoteReducer'
+import anecdoteReducer, { voteAnecdote, setAnecdotes } from '../reducers/anecdoteReducer'
 import { showNotification, hideNotification } from '../reducers/notificationReducer'
+import anecdoteService from '../services/Anecdotes'
 import Filter from './Filter'
 
 const Anecdote = ({ anecdote, vote }) =>
@@ -20,6 +22,13 @@ const AnecdoteList = () => {
     _.orderBy(state.anecdotes, 'votes', 'desc') : 
     _.orderBy(state.anecdotes, 'votes', 'desc').filter(anecdote => anecdote.content.includes(state.filter))
   )
+
+  useEffect(() => {
+    anecdoteService.getAll()
+      .then(anecdotes => {
+        dispatch(setAnecdotes(anecdotes))
+      })
+  }, [])
   
   const vote = anecdote => () => {
     dispatch(voteAnecdote(anecdote))
