@@ -9,6 +9,7 @@ const Notification = () => {
     borderWidth: 1,
     display: notification.display
   }
+  
   return (
     <div style={style}>
       { notification.message }
