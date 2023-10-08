@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { voteFor, initializeAnecdotes } from '../reducers/anecdoteReducer'
-import { showNotification, hideNotification } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 import Filter from './Filter'
 
 const Anecdote = ({ anecdote, vote }) =>
@@ -28,8 +28,7 @@ const AnecdoteList = () => {
   
   const vote = anecdote => async () => {
     await dispatch(voteFor(anecdote))
-    dispatch(showNotification(`You voted for '${anecdote.content}'`))
-    setTimeout(() => dispatch(hideNotification()), 5000)
+    dispatch(setNotification(`You voted for '${anecdote.content}'`, 5))
   }
   
   return (
