@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { useSelector, useDispatch } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
+import Filter from './Filter'
 
 const Anecdote = ({ anecdote, vote }) =>
   <div>
@@ -13,12 +14,17 @@ const Anecdote = ({ anecdote, vote }) =>
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => _.orderBy(state, 'votes', 'desc'))
+  const anecdotes = useSelector(state => 
+    state.filter === '' ? 
+    _.orderBy(state.anecdotes, 'votes', 'desc') : 
+    _.orderBy(state.anecdotes, 'votes', 'desc').filter(anecdote => anecdote.content.includes(state.filter))
+  )
   
   const vote = anecdote => () => dispatch(voteAnecdote(anecdote))
   
   return (
     <div>
+      <Filter />
       { anecdotes.map(anecdote => <Anecdote key={Number((Math.random() * 1000000).toFixed(0))} anecdote={anecdote} vote={vote} />) }
     </div>
   )
