@@ -14,6 +14,11 @@ const AnecdoteForm = () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
       dispatch({ type: 'SHOW', payload: `created ${newAnecdote.content}`})
       setTimeout(() => dispatch({ type: 'HIDE' }), 5 * 1000)
+    },
+    onError: (error) => {
+      const errorMsg = error.response.data.error
+      dispatch({ type: 'SHOW', payload: errorMsg})
+      setTimeout(() => dispatch({ type: 'HIDE' }), 5 * 1000)
     }
   })
 
