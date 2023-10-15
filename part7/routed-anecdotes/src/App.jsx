@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link, useMatch
+  Routes, Route, Link, useMatch, useNavigate
 } from 'react-router-dom'
+import Notification from './Notification'
+import { useNotificationDispatch, useNotificationObject } from './contexts/NotificationContext'
 
 const Menu = ({anecdotes, addNew}) => {
   const match = useMatch('/:id')
@@ -13,9 +15,10 @@ const Menu = ({anecdotes, addNew}) => {
   const padding = {
     paddingRight: 5
   }
-  
+
   return (
     <div>
+      <Notification />
       <div>
         <Link to='/' style={padding}>anecdotes</Link>
         <Link to='/create' style={padding}>create new</Link>
@@ -55,6 +58,7 @@ const Anecdote = ({ anecdote }) => (
   <div>
     <h3>{anecdote.content}</h3>
     <p>has {anecdote.votes} votes</p>
+    <p>for more info see <a href={anecdote.info}>{anecdote.info}</a></p>
   </div>
 )
 
@@ -86,6 +90,8 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const navigate = useNavigate()
+  const dispatch = useNotificationDispatch()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -95,6 +101,9 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
+    dispatch({ type: 'SHOW', payload: `a new anecdote ${content} created!` })
+    setTimeout(() => dispatch({ type: 'HIDE' }), 5 * 1000)
   }
 
   return (
@@ -137,8 +146,6 @@ const App = () => {
       id: 2
     }
   ])
-
-  const [notification, setNotification] = useState('')
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
