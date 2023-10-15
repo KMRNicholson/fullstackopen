@@ -97,13 +97,13 @@ const CreateNew = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content: content.value,
-      auther: author.value,
-      info: info.value,
+      content: content.input.value,
+      auther: author.input.value,
+      info: info.input.value,
       votes: 0
     })
     navigate('/')
-    dispatch({ type: 'SHOW', payload: `a new anecdote ${content.value} created!` })
+    dispatch({ type: 'SHOW', payload: `a new anecdote ${content.input.value} created!` })
     setTimeout(() => dispatch({ type: 'HIDE' }), 5 * 1000)
   }
 
@@ -119,15 +119,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...content.input}/>
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author.input} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...info.input} />
         </div>
         <button>create</button>
       </form>
