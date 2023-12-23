@@ -98,6 +98,7 @@ const typeDefs = `
   type Author {
     name: String!
     id: ID!
+    born: Int
     bookCount: Int
   }
 
@@ -122,7 +123,8 @@ const typeDefs = `
       author: String!
       published: Int!
       genres: [String!]!
-    ) : Book
+    ): Book
+    editAuthor(name: String!, setBornTo: Int!): Author
   }
 `
 
@@ -161,6 +163,15 @@ const resolvers = {
       books = books.concat(book)
 
       return { title: book.title, author: book.author}
+    },
+    editAuthor: (root, args) => {
+      if(!authors.find(author => author.name === args.name)){
+        return null
+      }
+
+      authors = authors.map(author => author.name === args.name ? { ...author, born: args.setBornTo } : author)
+
+      return authors.filter(author => author.name === args.name)[0]
     }
   }
 }
