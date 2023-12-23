@@ -1,16 +1,21 @@
 import { useState } from 'react'
+import { useMutation } from '@apollo/client'
 
-const NewBook = (props) => {
+import { ADD_BOOK } from '../graphql/mutations'
+
+const NewBook = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
-  
+
+  const [ addBook ] = useMutation(ADD_BOOK)
+
   const submit = async (event) => {
     event.preventDefault()
 
-    console.log('add book...')
+    addBook({variables:{title: title, author: author, published: Number(published), genres: genres}})
 
     setTitle('')
     setPublished('')
