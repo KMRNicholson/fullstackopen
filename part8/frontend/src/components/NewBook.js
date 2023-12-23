@@ -6,11 +6,7 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
-
-  if (!props.show) {
-    return null
-  }
-
+  
   const submit = async (event) => {
     event.preventDefault()
 
