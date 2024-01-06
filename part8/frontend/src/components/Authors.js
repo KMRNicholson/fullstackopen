@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
 
 import { ALL_AUTHORS } from '../graphql/queries'
+import Author from './Author'
 
 const Authors = () => {
   const result = useQuery(ALL_AUTHORS)
@@ -22,11 +23,7 @@ const Authors = () => {
             <th>books</th>
           </tr>
           {authors.map((a) => (
-            <tr key={a.name}>
-              <td>{a.name}</td>
-              <td>{a.born}</td>
-              <td>{a.bookCount}</td>
-            </tr>
+            <Author author={a} refetchAuthors={ALL_AUTHORS}/>
           ))}
         </tbody>
       </table>
