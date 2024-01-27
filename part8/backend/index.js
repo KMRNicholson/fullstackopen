@@ -1,6 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v4: uuidv4 } = require('uuid');
+const { GraphQLError } = require('graphql')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -102,38 +102,55 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      let author = await Author.findOne({name: args.author})
+      try {
+        let author = await Author.findOne({name: args.author})
 
-      if(!author){
-        author = await new Author({name: args.author}).save()
+        if (!author) {
+          author = await new Author({name: args.author}).save()
+        }
+
+        const book = new Book({
+          title: args.title,
+          author: author._id,
+          published: args.published,
+          genres: args.genres
+        })
+
+        const savedBook = await book.save()
+        const response = await Book.findOne({_id: savedBook._id}).populate("author", {
+          name: 1,
+          id: 1,
+        })
+
+        return response
+      } catch (error) {
+        throw new GraphQLError('Saving book failed', {
+          extensions: {
+            code: 'VALIDATION_FAILED',
+            error
+          }
+        })
       }
-
-      const book = new Book({
-        title: args.title,
-        author: author._id,
-        published: args.published,
-        genres: args.genres
-      })
-
-      const savedBook = await book.save()      
-      const response = await Book.findOne({_id: savedBook._id}).populate("author", {
-        name: 1,
-        id: 1,
-      })
-
-      return response
-
     },
     editAuthor: async (root, args) => {
-      const author = await Author.findOne({ name: args.name });
+      try {
+        const author = await Author.findOne({ name: args.name });
 
-      if (!author) {
-        return null
+        if (!author) {
+          return null
+        }
+
+        await Author.updateOne({ _id: author._id }, { name: args.name, born: args.setBornTo }, { runValidators: true });
+
+        return await Author.findOne({ name: args.name });
+      } catch (error) {
+        throw new GraphQLError('Updating author failed', {
+          extensions: {
+            code: 'VALIDATION_FAILED',
+            error
+          }
+        })
       }
-
-      await Author.updateOne({ _id: author._id }, { name: args.name, born: args.setBornTo }, { runValidators: true });
-
-      return await Author.findOne({ name: args.name });
     }
   }
 }
