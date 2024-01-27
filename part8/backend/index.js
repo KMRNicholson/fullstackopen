@@ -131,7 +131,7 @@ const resolvers = {
         return null
       }
 
-      const updatedAuthor = await Author.updateOne({ _id: author._id }, { name: args.name, born: args.setBornTo }, { runValidators: true });
+      await Author.updateOne({ _id: author._id }, { name: args.name, born: args.setBornTo }, { runValidators: true });
 
       return await Author.findOne({ name: args.name });
     }
