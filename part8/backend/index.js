@@ -78,9 +78,15 @@ const resolvers = {
 
       return books;
     },
-    bookCount: async () => await Book.find({}).length,
+    bookCount: async () => {
+      const books = await Book.find({})
+      return books.length
+    },
     allAuthors: async () => await Author.find({}),
-    authorCount: async () => await Author.find({}).length
+    authorCount: async () => {
+      const authors = await Author.find({})
+      return authors.length
+    }
   },
   Author: {
     name: (root) => root.name,
@@ -118,14 +124,16 @@ const resolvers = {
       return response
 
     },
-    editAuthor: (root, args) => {
-      if(!authors.find(author => author.name === args.name)){
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name });
+
+      if (!author) {
         return null
       }
 
-      authors = authors.map(author => author.name === args.name ? { ...author, born: args.setBornTo } : author)
+      const updatedAuthor = await Author.updateOne({ _id: author._id }, { name: args.name, born: args.setBornTo }, { runValidators: true });
 
-      return authors.filter(author => author.name === args.name)[0]
+      return await Author.findOne({ name: args.name });
     }
   }
 }
