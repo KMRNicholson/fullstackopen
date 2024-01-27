@@ -58,7 +58,11 @@ const typeDefs = `
 const resolvers = {
   Query: {
     allBooks: async (root, args) => {
-      const books = await Book.find({})
+      const books = await Book.find({}).populate("author", {
+        name: 1,
+        born: 1,
+        id: 1,
+      });
       
       if(args.author && args.genre){
         return books.filter(book => book.author === args.author && book.genres.includes(args.genre))
@@ -72,6 +76,8 @@ const resolvers = {
         return books.filter(book => book.genres.includes(args.genre))
       }
 
+
+
       return books;
     },
     bookCount: async () => await Book.find({}).length,
@@ -80,7 +86,15 @@ const resolvers = {
   },
   Author: {
     name: (root) => root.name,
-    bookCount: async (root) => await Book.find({}).filter(book => book.author === root.name).length
+    bookCount: async (root) => {
+      const books = await Book.find({}).populate("author", {
+        name: 1,
+        born: 1,
+        id: 1,
+      });
+      
+      return books.filter(book => book.author.name === root.name).length
+    }
   },
   Mutation: {
     addBook: async (root, args) => {
