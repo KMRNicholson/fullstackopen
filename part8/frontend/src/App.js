@@ -3,7 +3,7 @@ import {
   Routes, Route, Link
 } from 'react-router-dom'
 import { useState } from 'react'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -12,6 +12,7 @@ import LoginForm from './components/LoginForm'
 import FavoriteBooks from './components/FavoriteBooks'
 
 import { ALL_BOOKS } from './graphql/queries'
+import { BOOK_ADDED } from './graphql/subscriptions'
 
 const Home = () => <div>Welcome to the library app!</div>
 
@@ -36,7 +37,7 @@ const NavBar = ({logout}) => {
         <Route path='/authors' element={<Authors />} />
         <Route path='/books' element={<Books />} />
         <Route path='/favorite-books' element={<FavoriteBooks />} />
-        <Route path='/books/add' element={<NewBook refetchBooks={ALL_BOOKS} />} />
+        <Route path='/books/add' element={<NewBook />} />
       </Routes>
     </div>
   )
@@ -46,6 +47,18 @@ const NavBar = ({logout}) => {
 const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const book = data.data.bookAdded
+      alert(`Book was added: ${book.title}`)
+      client.cache.updateQuery({ query: ALL_BOOKS, variables: { genre: "" } }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(book)
+        }
+      })
+    }
+  })
 
   const logout = () => {
     setToken(null)
