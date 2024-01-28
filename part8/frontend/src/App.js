@@ -3,7 +3,7 @@ import {
   Routes, Route, Link
 } from 'react-router-dom'
 import { useState } from 'react'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -12,6 +12,7 @@ import LoginForm from './components/LoginForm'
 import FavoriteBooks from './components/FavoriteBooks'
 
 import { ALL_BOOKS } from './graphql/queries'
+import { BOOK_ADDED } from './graphql/subscriptions'
 
 const Home = () => <div>Welcome to the library app!</div>
 
@@ -46,6 +47,13 @@ const NavBar = ({logout}) => {
 const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const book = data.data.bookAdded.title
+      alert(`Book was added: ${book}`)
+    }
+  })
 
   const logout = () => {
     setToken(null)
