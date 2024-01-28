@@ -4,6 +4,8 @@ import _ from 'lodash'
 import { ALL_BOOKS } from '../graphql/queries'
 import { useState } from 'react'
 
+import BooksList from './BooksList'
+
 const Books = () => {
   const [genre, setGenre] = useState("")
   
@@ -23,22 +25,9 @@ const Books = () => {
     <div>
       <h2>books</h2>
       <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {books.map((book) => (
-            <tr key={book.title}>
-              <td>{book.title}</td>
-              <td>{book.author.name}</td>
-              <td>{book.published}</td>
-            </tr>
-          ))}
-          {genres.map(genre => <button key={genre} onClick={()=>setGenre(genre)}>{genre}</button>)}<button onClick={()=>setGenre("")}>clear filter</button>
-        </tbody>
+        <BooksList books={books} />
       </table>
+      {genres.map(genre => <button key={genre} onClick={()=>setGenre(genre)}>{genre}</button>)}<button onClick={()=>setGenre("")}>clear filter</button>
     </div>
   )
 }

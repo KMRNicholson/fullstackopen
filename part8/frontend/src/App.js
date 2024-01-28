@@ -9,6 +9,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
+import FavoriteBooks from './components/FavoriteBooks'
 
 import { ALL_BOOKS } from './graphql/queries'
 
@@ -26,6 +27,7 @@ const NavBar = ({logout}) => {
         <Link to='/authors' style={padding}>authors</Link>
         <Link to='/books' style={padding}>books</Link>
         <Link to='/books/add' style={padding}>add book</Link>
+        <Link to='/favorite-books' style={padding}>recommendations</Link>
         <button onClick={()=>logout()} style={padding}>logout</button>
       </div>
       
@@ -33,6 +35,7 @@ const NavBar = ({logout}) => {
         <Route path='/' element={<Home />} />
         <Route path='/authors' element={<Authors />} />
         <Route path='/books' element={<Books />} />
+        <Route path='/favorite-books' element={<FavoriteBooks />} />
         <Route path='/books/add' element={<NewBook refetchBooks={ALL_BOOKS} />} />
       </Routes>
     </div>
