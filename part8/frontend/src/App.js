@@ -10,6 +10,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 
+import { ALL_BOOKS } from './graphql/queries'
+
 const Home = () => <div>Welcome to the library app!</div>
 
 const NavBar = ({logout}) => {
@@ -31,7 +33,7 @@ const NavBar = ({logout}) => {
         <Route path='/' element={<Home />} />
         <Route path='/authors' element={<Authors />} />
         <Route path='/books' element={<Books />} />
-        <Route path='/books/add' element={<NewBook />} />
+        <Route path='/books/add' element={<NewBook refetchBooks={ALL_BOOKS} />} />
       </Routes>
     </div>
   )
