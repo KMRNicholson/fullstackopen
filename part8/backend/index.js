@@ -52,6 +52,7 @@ const typeDefs = `
 
   type Query {
     allBooks(author: String, genre: String): [Book]
+    favoriteBooks: [Book]
     bookCount: Int
     allAuthors: [Author]
     allUsers: [User]
@@ -100,6 +101,15 @@ const resolvers = {
       }
 
       return books;
+    },
+    favoriteBooks: async (root, args, context) => {
+      const books = await Book.find({}).populate("author", {
+        name: 1,
+        born: 1,
+        id: 1,
+      });
+
+      return books.filter(book => book.genres.includes(context.currentUser.favoriteGenre))
     },
     bookCount: async () => {
       const books = await Book.find({})

@@ -22,3 +22,16 @@ export const ALL_BOOKS = gql`
     }
   }
 `
+
+export const FAV_BOOKS = gql`
+  query {
+    favoriteBooks {
+      title
+      author {
+        name
+      }
+      published
+      genres
+    }
+  }
+`
