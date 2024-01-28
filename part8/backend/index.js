@@ -54,6 +54,7 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Book]
     bookCount: Int
     allAuthors: [Author]
+    allUsers: [User]
     authorCount: Int
     me: User
   }
@@ -105,9 +106,13 @@ const resolvers = {
       return books.length
     },
     allAuthors: async () => await Author.find({}),
+    allUsers: async () => await User.find({}),
     authorCount: async () => {
       const authors = await Author.find({})
       return authors.length
+    },
+    me: (root, args, context) => {
+      return context.currentUser
     }
   },
   Author: {
@@ -123,7 +128,15 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError('Unauthorized', {
+          extensions: {
+            code: 'UNAUTHORIZED'
+          }
+        })
+      }
+      
       try {
         let author = await Author.findOne({name: args.author})
 
@@ -154,7 +167,15 @@ const resolvers = {
         })
       }
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError('Unauthorized', {
+          extensions: {
+            code: 'UNAUTHORIZED'
+          }
+        })
+      }
+
       try {
         const author = await Author.findOne({ name: args.name });
 
@@ -201,10 +222,11 @@ const resolvers = {
 
       const userForToken = {
         username: user.username,
+        favoriteGenre: user.favoriteGenre,
         id: user._id,
       }
 
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+      return { value: jwt.sign(userForToken, JWT_SECRET) }
     }
   }
 }
@@ -216,6 +238,17 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: 4000 },
+  context: async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.startsWith('Bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), JWT_SECRET
+      )
+      const currentUser = await User
+        .findById(decodedToken.id)
+      return { currentUser }
+    }
+  },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`)
 })
