@@ -23,7 +23,7 @@ const Authors = () => {
             <th>books</th>
           </tr>
           {authors.map((a) => (
-            <Author author={a} refetchAuthors={ALL_AUTHORS}/>
+            <Author key={a.name} author={a} refetchAuthors={ALL_AUTHORS}/>
           ))}
         </tbody>
       </table>
