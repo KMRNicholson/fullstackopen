@@ -17,7 +17,7 @@ const bmiCategories: Record<string, number[]> = {
   ],
   "Overweight (Pre-obese)": [
     25.0,
-    29.9
+    30.0
   ],
   "Obese (Class I)": [
     30.0,
