@@ -1,3 +1,8 @@
+interface BMIInput {
+  height: number;
+  weight: number;
+} 
+
 const bmiCategories: Record<string, number[]> = {
   "Underweight (Severe thinness)": [
     0.0,
@@ -50,4 +55,32 @@ const calculateBmi = (height: number, weight: number): string => {
   return result;
 };
 
-console.log(calculateBmi(180, 74))
+const parseArgs = (args: string[]): BMIInput => {
+  if (args.length > 4) throw new Error('Too many arguments. Please enter only height and weight.');
+  if (args.length < 4) throw new Error('Too few arguments. Please enter height and weight.');
+  
+  const height = Number(process.argv[2]);
+  const weight = Number(process.argv[3]);
+  
+  if (isNaN(height) || isNaN(weight)) {
+    throw new Error('Either the specified height or weight was not a valid number. Try again.');
+  } else {
+    return {
+      height,
+      weight
+    };
+  }
+}
+
+try {
+  const { height, weight } = parseArgs(process.argv)
+  console.log(calculateBmi(height, weight));
+} catch (error: unknown) {
+  let errorMsg = 'Something bad happened';
+  if (error instanceof Error) {
+    errorMsg += `\nError: ${error.message}` 
+  }
+
+  console.log(errorMsg)
+}
+
