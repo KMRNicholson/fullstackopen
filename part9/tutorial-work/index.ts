@@ -1,14 +1,14 @@
-type Operation = 'multiply' | 'add' | 'divide';
+import express from 'express';
 
-const calculator = (a: number, b: number, op: Operation): number => {
-  if (op === 'multiply') {
-    return a * b;
-  } else if (op === 'add') {
-    return a + b;
-  } else if (op === 'divide') {
-    if (b === 0) throw new Error('can\'t divide by 0!');
-    return a / b;
-  }
-}
 
-console.log(calculator(2, 4, 'multiply'));
+const app = express();
+
+app.get('/ping', (_req, res) => {
+  res.send('pong');
+});
+
+const PORT = 3003;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

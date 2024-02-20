@@ -17,26 +17,26 @@ const ratings = [
   'bad',
   'okay',
   'good',
-]
+];
 
 const calculateExercises = (dailyHours: number[], targetAverage: number): ExerciseReport => {
   const periodLength = dailyHours.length;
   const trainingDays = dailyHours.filter(hours => hours > 0).length;
   const target = targetAverage;
-  const totalHours = dailyHours.reduce((sum, hours) => sum += hours, 0)
-  const average = totalHours / periodLength
+  const totalHours = dailyHours.reduce((sum, hours) => sum += hours, 0);
+  const average = totalHours / periodLength;
 
-  const ratio = target / average
+  const ratio = target / average;
 
-  let rating = 1
+  let rating = 1;
   if (ratio <= 1) {
-    rating = 3
+    rating = 3;
   } else if (ratio <= target) {
-    rating = 2
+    rating = 2;
   }
   
-  const success = rating === 3 ? true : false
-  const ratingDescription = ratings[rating-1]
+  const success = rating === 3 ? true : false;
+  const ratingDescription = ratings[rating - 1];
 
   return {
     periodLength,
@@ -46,8 +46,8 @@ const calculateExercises = (dailyHours: number[], targetAverage: number): Exerci
     ratingDescription,
     target,
     average
-  }
-}
+  };
+};
 
 const parseExerciseInput = (args: string[]): ExerciseInput => {
   if (args.length < 4) throw new Error('Too few arguments. Please enter hours for at least one day and target.');
@@ -60,7 +60,7 @@ const parseExerciseInput = (args: string[]): ExerciseInput => {
 
   while (i < args.length) {
     const dailyHours = Number(args[i]);
-    if(isNaN(dailyHours)) throw new Error('Daily hours in period must be specified as numbers.');
+    if (isNaN(dailyHours)) throw new Error('Daily hours in period must be specified as numbers.');
     period = [...period, dailyHours];
     i++;
   }
@@ -68,17 +68,17 @@ const parseExerciseInput = (args: string[]): ExerciseInput => {
   return {
     period,
     target
-  }
-}
+  };
+};
 
 try {
-  const { period, target } = parseExerciseInput(process.argv)
+  const { period, target } = parseExerciseInput(process.argv);
   console.log(calculateExercises(period, target));
 } catch (error: unknown) {
   let errorMsg = 'Something bad happened';
   if (error instanceof Error) {
-    errorMsg += `\nError: ${error.message}` 
+    errorMsg += `\nError: ${error.message}`;
   }
 
-  console.log(errorMsg)
+  console.log(errorMsg);
 }
