@@ -33,7 +33,7 @@ const bmiCategories: Record<string, number[]> = {
   ],
 };
 
-const withinRange = (lower: number, upper: number, number: number): boolean => number >= lower && number < upper
+const withinRange = (lower: number, upper: number, number: number): boolean => number >= lower && number < upper;
 
 export const calculateBmi = (height: number, weight: number): string => {
   let result = `Could not determine BMI category based on weight ${weight} and height ${height}`;
@@ -43,8 +43,8 @@ export const calculateBmi = (height: number, weight: number): string => {
     const lower = bmiCategories[category][0];
     const upper = bmiCategories[category][1];
     if (withinRange(lower, upper, bmi)) {
-      result = category
-    }
+      result = category;
+		}
   });
 
   return result;

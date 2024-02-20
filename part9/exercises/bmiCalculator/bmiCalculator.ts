@@ -1,7 +1,7 @@
 interface BMIInput {
   height: number;
   weight: number;
-} 
+}
 
 const bmiCategories: Record<string, number[]> = {
   "Underweight (Severe thinness)": [
@@ -38,7 +38,7 @@ const bmiCategories: Record<string, number[]> = {
   ],
 };
 
-const withinRange = (lower: number, upper: number, number: number): boolean => number >= lower && number < upper
+const withinRange = (lower: number, upper: number, number: number): boolean => number >= lower && number < upper;
 
 const calculateBmi = (height: number, weight: number): string => {
   let result = `Could not determine BMI category based on weight ${weight} and height ${height}`;
@@ -48,7 +48,7 @@ const calculateBmi = (height: number, weight: number): string => {
     const lower = bmiCategories[category][0];
     const upper = bmiCategories[category][1];
     if (withinRange(lower, upper, bmi)) {
-      result = category
+      result = category;
     }
   });
 
@@ -70,17 +70,17 @@ const parseArgs = (args: string[]): BMIInput => {
       weight
     };
   }
-}
+};
 
 try {
-  const { height, weight } = parseArgs(process.argv)
+  const { height, weight } = parseArgs(process.argv);
   console.log(calculateBmi(height, weight));
 } catch (error: unknown) {
   let errorMsg = 'Something bad happened';
   if (error instanceof Error) {
-    errorMsg += `\nError: ${error.message}` 
+    errorMsg += `\nError: ${error.message}`;
   }
 
-  console.log(errorMsg)
+  console.log(errorMsg);
 }
 
