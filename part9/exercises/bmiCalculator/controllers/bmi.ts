@@ -12,4 +12,4 @@ bmiRouter.get('/', (_req, res) => {
   res.status(200).send(calculateBmi(heightInput, weightInput));
 });
 
-module.exports = bmiRouter;
+export default bmiRouter;
