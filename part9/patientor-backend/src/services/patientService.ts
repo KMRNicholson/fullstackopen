@@ -18,7 +18,7 @@ const addPatient = (newPatient: NewPatient): NonSensitivePatient => {
   const addedPatient: NonSensitivePatient = {
     id,
     ...newPatient
-  }
+  };
 
   return addedPatient;
 };
