@@ -2,30 +2,7 @@ import Content from "./components/Content";
 import Header from "./components/Header";
 import Total from "./components/Total";
 
-interface CoursePartBase {
-  name: string;
-  exerciseCount: number;
-}
-
-interface CoursePartDescription extends CoursePartBase {
-  description: string;
-}
-
-interface CoursePartBasic extends CoursePartDescription {
-  kind: "basic"
-}
-
-interface CoursePartGroup extends CoursePartBase {
-  groupProjectCount: number;
-  kind: "group"
-}
-
-interface CoursePartBackground extends CoursePartDescription {
-  backgroundMaterial: string;
-  kind: "background"
-}
-
-type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground;
+import { CoursePart } from "./types";
 
 const App = () => {
   const courseName = "Half Stack application development";
@@ -68,7 +45,10 @@ const App = () => {
   return (
     <div>
       <Header content={courseName} />
-      {courseParts.map(part => <Content name={part.name} exerciseCount={part.exerciseCount} />)}
+      {courseParts.map(part => {
+        return <Content part={part} />
+      })
+      }
       <Total total={totalExercises} />
     </div>
   );
