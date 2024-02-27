@@ -29,6 +29,14 @@ const Content = (props: ContentProps) => {
         description={part.description}
         backgroundMaterial={part.backgroundMaterial}
       />
+    
+    case "special":
+      return <Part
+        name={part.name}
+        exerciseCount={part.exerciseCount}
+        description={part.description}
+        requirements={part.requirements}
+      />
   
     default:
       return assertNever(part);
