@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+
 import diaryService from "../services/diaryService";
 import { NewDiaryEntry, NonSensitiveDiaryEntry, Visibility, Weather } from "../types";
 
@@ -12,6 +14,7 @@ const NewDiary = (props: NewDiaryProps) => {
   const [weather, setWeather] = useState<Weather>(Weather.Cloudy);
   const [visibility, setVisibility] = useState<Visibility>(Visibility.Good);
   const [comment, setComment] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   const createDiary = (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -23,21 +26,37 @@ const NewDiary = (props: NewDiaryProps) => {
       comment,
     };
 
-    diaryService.addDiary(newDiary).then(diary => {
-      const addedDiary = {
-        id: diary.id,
-        date: diary.date,
-        weather: diary.weather,
-        visibility: diary.visibility,
-      };
+    diaryService
+      .addDiary(newDiary)
+      .then(res => {
+        const diary = res.data
 
-      const newDiaries = props.diaries.concat(addedDiary);
-      props.setDiaries(newDiaries);
-    });
+        const addedDiary = {
+          id: diary.id,
+          date: diary.date,
+          weather: diary.weather,
+          visibility: diary.visibility,
+        };
+
+        const newDiaries = props.diaries.concat(addedDiary);
+        props.setDiaries(newDiaries);
+      })
+      .catch(error => {
+        if (axios.isAxiosError(error)) {
+          setError(error.response?.data);
+        } else {
+          setError('Something went wrong.');
+        }
+
+        setTimeout(() => {
+          setError('');
+        }, 5000);
+      });
   }
 
   return (
     <div>
+      <div style={{color: 'red'}}>{error}</div>
       <h2>Add new entry</h2>
       <form onSubmit={createDiary}>
         <div>
