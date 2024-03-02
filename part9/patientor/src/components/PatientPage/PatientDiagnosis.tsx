@@ -11,10 +11,7 @@ const PatientDiagnosis = ({ diagnosis }: Props) => {
     <div className="App">
       <Box key={ diagnosis.code } style={{padding: 10}}>
         <Typography align="left" variant="body2">
-          {diagnosis.code}: 
-        </Typography>
-        <Typography align="left" variant="body2">
-          {diagnosis.name}
+          {diagnosis.code}: {diagnosis.name}
         </Typography>
       </Box>
     </div>

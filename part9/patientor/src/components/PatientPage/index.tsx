@@ -1,14 +1,15 @@
 import { Box, Typography } from '@mui/material';
 import { Female, Male, Transgender } from "@mui/icons-material";
 
-import { Patient } from "../../types";
+import { Diagnosis, Patient } from "../../types";
 import PatientEntry from './PatientEntry';
 
 interface Props {
   patient : Patient
+  diagnoses : Diagnosis[]
 }
 
-const PatientPage = ({ patient }: Props) => {
+const PatientPage = ({ patient, diagnoses }: Props) => {
   
   const genders = {
     male: <Male />,
@@ -35,7 +36,7 @@ const PatientPage = ({ patient }: Props) => {
         <Typography align="left" variant="h5">
           Entries:
         </Typography>
-        { patient.entries.map(entry => <PatientEntry key={entry.id} entry={entry} />) }
+        { patient.entries.map(entry => <PatientEntry key={entry.id} entry={entry} diagnoses={diagnoses} />) }
       </Box>
     </div>
   );
