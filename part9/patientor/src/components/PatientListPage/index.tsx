@@ -8,22 +8,31 @@ import AddPatientModal from "../AddPatientModal";
 import HealthRatingBar from "../HealthRatingBar";
 
 import patientService from "../../services/patients";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   patients : Patient[]
   setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
+  setPatientId: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const PatientListPage = ({ patients, setPatients } : Props ) => {
+const PatientListPage = ({ patients, setPatients, setPatientId } : Props ) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
+
+  const navigate = useNavigate();
 
   const openModal = (): void => setModalOpen(true);
 
   const closeModal = (): void => {
     setModalOpen(false);
     setError(undefined);
+  };
+  
+  const viewPatient = (patientId: string): void => {
+    setPatientId(patientId);
+    navigate(`/patient/${patientId}`);
   };
 
   const submitNewPatient = async (values: PatientFormValues) => {
@@ -71,6 +80,11 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
               <TableCell>{patient.occupation}</TableCell>
               <TableCell>
                 <HealthRatingBar showText={false} rating={1} />
+              </TableCell>
+              <TableCell>
+                <Button variant="contained" onClick={() => viewPatient(patient.id)}>
+                  View
+                </Button>
               </TableCell>
             </TableRow>
           ))}
