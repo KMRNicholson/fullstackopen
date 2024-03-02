@@ -1,6 +1,6 @@
 import { Gender, NewPatient } from "./types";
 
-const isString = (text: unknown): text is string => typeof text === 'string' || text instanceof String;
+export const isString = (text: unknown): text is string => typeof text === 'string' || text instanceof String;
 
 const isDoB = (dob: string): boolean => Boolean(Date.parse(dob));
 
@@ -48,6 +48,7 @@ export const toNewPatient = (object: unknown): NewPatient => {
       gender: parseGender(object.gender),
       occupation: parseString(object.occupation, 'occupation'),
       ssn: parseString(object.ssn, 'ssn'),
+      entries: [],
     };
 
     return newPatient;

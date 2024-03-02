@@ -4,13 +4,27 @@ import patients from '../../data/patients';
 import { NewPatient, NonSensitivePatient } from '../types';
 
 const getPatients = (): NonSensitivePatient[] => {
-  return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+  return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
     id,
     name,
     dateOfBirth,
     gender,
-    occupation
+    occupation,
+    entries,
   }));
+};
+
+const getPatient = (patientId: string): NonSensitivePatient => {
+  const { id, name, dateOfBirth, gender, occupation, entries } = patients.filter(patient => patient.id === patientId)[0];
+  
+  return {
+    id,
+    name,
+    dateOfBirth,
+    gender,
+    occupation,
+    entries
+  };
 };
 
 const addPatient = (newPatient: NewPatient): NonSensitivePatient => {
@@ -25,5 +39,6 @@ const addPatient = (newPatient: NewPatient): NonSensitivePatient => {
 
 export default {
   getPatients,
+  getPatient,
   addPatient,
 };
