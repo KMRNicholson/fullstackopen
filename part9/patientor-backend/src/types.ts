@@ -14,11 +14,6 @@ export interface Diagnosis {
   latin?: string;
 }
 
-export type Entry =
-  HealthCheckEntry |
-  OccupationalHealthcareEntry |
-  HospitalEntry;
-
 export interface Patient {
   id: string;
   name: string;
@@ -28,6 +23,11 @@ export interface Patient {
   occupation: string;
   entries: Entry[];
 }
+
+export type Entry =
+  HealthCheckEntry |
+  OccupationalHealthcareEntry |
+  HospitalEntry;
 
 interface EntryBase {
   id: string;
