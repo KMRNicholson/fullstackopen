@@ -1,11 +1,22 @@
 import express from 'express';
 import patientService from '../services/patientService';
-import { toNewPatient } from '../utils';
+import { toNewPatient, isString } from '../utils';
 
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-  res.send(patientService.getPatients());
+  const patients = patientService.getPatients();
+  console.log(patients);
+  res.send(patients);
+});
+
+router.get('/:id', (_req, res) => {
+  if (!_req.params.id || !isString(_req.params.id)) {
+    res.status(400).send('Invalid id');
+  }
+  const id = `${_req.params.id}`;
+
+  res.send(patientService.getPatient(id));
 });
 
 router.post('/', (_req, res) => {
